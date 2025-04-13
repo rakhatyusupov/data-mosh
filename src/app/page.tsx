@@ -4,7 +4,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Controls } from "@/components/Controls";
 
-// Dynamically import P5Sketch with SSR disabled
 const P5Sketch = dynamic(() => import("@/components/sketch/P5Sketch"), {
   ssr: false,
   loading: () => (

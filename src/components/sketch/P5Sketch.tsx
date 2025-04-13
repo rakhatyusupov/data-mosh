@@ -23,10 +23,10 @@ const P5Sketch = ({ lerpFactor, ballSize }: P5SketchProps) => {
       };
 
       p.draw = () => {
-        p.background(0);
-        p.fill(255);
+        p.fill(255, 0, 0);
+        p.background(0, 25, 90, 5);
+        p.noStroke();
 
-        // Smooth movement using lerp
         ballPos.current.x = p.lerp(ballPos.current.x, p.mouseX, lerpFactor);
         ballPos.current.y = p.lerp(ballPos.current.y, p.mouseY, lerpFactor);
 
