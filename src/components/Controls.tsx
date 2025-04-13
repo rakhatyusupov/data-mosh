@@ -3,25 +3,41 @@ import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ControlsProps {
   onLerpChange: (value: number) => void;
   onSizeChange: (value: number) => void;
   onReset: () => void;
+  onEffectChange: (effect: string) => void;
 }
 
 export function Controls({
   onLerpChange,
   onSizeChange,
   onReset,
+  onEffectChange,
 }: ControlsProps) {
   const [lerp, setLerp] = useState(0.1);
   const [size, setSize] = useState(50);
+  const [effect, setEffect] = useState("none");
 
   const handleReset = () => {
     setLerp(0.1);
     setSize(50);
+    setEffect("none");
     onReset();
+  };
+
+  const handleEffectChange = (value: string) => {
+    setEffect(value);
+    onEffectChange(value);
   };
 
   return (
@@ -39,9 +55,9 @@ export function Controls({
           max={1}
           step={0.01}
         />
-        <span className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           Current: {lerp.toFixed(2)}
-        </span>
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -57,11 +73,25 @@ export function Controls({
           max={200}
           step={1}
         />
-        <span className="text-xs text-muted-foreground">Current: {size}px</span>
+        <div className="text-xs text-muted-foreground">Current: {size}px</div>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Drawing Effect</Label>
+        <Select value={effect} onValueChange={handleEffectChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select effect" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">None</SelectItem>
+            <SelectItem value="circle">Circle</SelectItem>
+            <SelectItem value="rectangle">Rectangle</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <Button variant="outline" className="w-full" onClick={handleReset}>
-        Reset Defaults
+        Reset All Settings
       </Button>
     </div>
   );
