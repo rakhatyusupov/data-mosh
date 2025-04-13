@@ -17,15 +17,23 @@ export default function Home() {
   const [ballSize, setBallSize] = useState(50);
   const [selectedEffect, setSelectedEffect] = useState("none");
 
+  const handleExport = (data: string) => {
+    const link = document.createElement("a");
+    link.download = "data-mosh-export.jpg";
+    link.href = data;
+    link.click();
+  };
+
   return (
     <main className="h-screen w-full flex flex-col lg:flex-row">
       {/* Canvas Container */}
-      <div className="flex-1 w-full h-screen flex items-center justify-center p-4">
-        <div className="relative w-full h-full max-w-[90vh] max-h-[90vh]">
+      <div className="flex-1 w-full h-screen flex items-center justify-start pt-12">
+        <div className="relative w-full h-full flex items-center justify-center">
           <P5Sketch
             lerpFactor={lerpFactor}
             ballSize={ballSize}
             selectedEffect={selectedEffect}
+            onExport={handleExport}
           />
         </div>
       </div>
@@ -36,10 +44,9 @@ export default function Home() {
           onLerpChange={setLerpFactor}
           onSizeChange={setBallSize}
           onEffectChange={setSelectedEffect}
-          onReset={() => {
-            setLerpFactor(0.1);
-            setBallSize(50);
-            setSelectedEffect("none");
+          onExport={() => {
+            // Trigger export via keyboard event
+            document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}
         />
       </div>

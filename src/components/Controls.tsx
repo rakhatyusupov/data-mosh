@@ -14,26 +14,19 @@ import {
 interface ControlsProps {
   onLerpChange: (value: number) => void;
   onSizeChange: (value: number) => void;
-  onReset: () => void;
   onEffectChange: (effect: string) => void;
+  onExport: () => void;
 }
 
 export function Controls({
   onLerpChange,
   onSizeChange,
-  onReset,
   onEffectChange,
+  onExport,
 }: ControlsProps) {
   const [lerp, setLerp] = useState(0.1);
   const [size, setSize] = useState(50);
   const [effect, setEffect] = useState("none");
-
-  const handleReset = () => {
-    setLerp(0.1);
-    setSize(50);
-    setEffect("none");
-    onReset();
-  };
 
   const handleEffectChange = (value: string) => {
     setEffect(value);
@@ -90,8 +83,8 @@ export function Controls({
         </Select>
       </div>
 
-      <Button variant="outline" className="w-full" onClick={handleReset}>
-        Reset All Settings
+      <Button variant="outline" className="w-full" onClick={onExport}>
+        Export as JPG (or press 'e')
       </Button>
     </div>
   );
