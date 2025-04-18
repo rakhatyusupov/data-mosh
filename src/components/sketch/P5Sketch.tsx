@@ -4,9 +4,15 @@ import p5 from "p5";
 import { drawCircle } from "@/_lib/drawCircle";
 import { drawRect } from "@/_lib/drawRect";
 
+interface Resolution {
+  width: number;
+  height: number;
+}
+
 interface P5SketchProps {
   activeEffects: string[];
   onExport: (data: string) => void;
+  resolution: Resolution;
 }
 
 const effectsLibrary: {
@@ -16,7 +22,7 @@ const effectsLibrary: {
   rectangle: drawRect,
 };
 
-const P5Sketch = ({ activeEffects, onExport }: P5SketchProps) => {
+const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
   const mainCanvas = useRef<p5.Element | null>(null);
@@ -35,7 +41,11 @@ const P5Sketch = ({ activeEffects, onExport }: P5SketchProps) => {
         mainCanvas.current = canvas;
         canvas.parent(sketchRef.current!);
 
-        bufferCanvas.current = p.createGraphics(1920, 1920);
+        bufferCanvas.current = p.createGraphics(
+          resolution.width,
+          resolution.height
+        );
+
         resizeCanvas();
       };
 
@@ -56,7 +66,7 @@ const P5Sketch = ({ activeEffects, onExport }: P5SketchProps) => {
         if (!bufferCanvas.current) return;
 
         const buffer = bufferCanvas.current;
-        const scaleFactor = 1920 / p.width;
+        const scaleFactor = resolution.width / p.width;
 
         const bufferMouseX = p.mouseX * scaleFactor;
         const bufferMouseY = p.mouseY * scaleFactor;
@@ -84,7 +94,7 @@ const P5Sketch = ({ activeEffects, onExport }: P5SketchProps) => {
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [onExport]);
+  }, [onExport, resolution]);
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };

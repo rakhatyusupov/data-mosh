@@ -12,10 +12,19 @@ const P5Sketch = dynamic(() => import("@/components/sketch/P5Sketch"), {
   ),
 });
 
+interface Resolution {
+  width: number;
+  height: number;
+}
+
 export default function Home() {
   const [lerpFactor, setLerpFactor] = useState(0.1);
   const [ballSize, setBallSize] = useState(50);
   const [activeEffects, setActiveEffects] = useState<string[]>([]);
+  const [resolution, setResolution] = useState<Resolution>({
+    width: 1920,
+    height: 1920,
+  });
 
   const handleExport = (data: string) => {
     const link = document.createElement("a");
@@ -26,7 +35,6 @@ export default function Home() {
 
   return (
     <main className="h-screen w-full flex flex-col lg:flex-row">
-      {/* Canvas Container */}
       <div className="flex-1 w-full h-screen flex items-center justify-start ">
         <div className="parent relative w-full h-full flex items-center justify-center overflow-hidden">
           <P5Sketch
@@ -34,11 +42,11 @@ export default function Home() {
             ballSize={ballSize}
             activeEffects={activeEffects}
             onExport={handleExport}
+            resolution={resolution}
           />
         </div>
       </div>
 
-      {/* Controls Panel */}
       <div className="lg:w-80 lg:h-screen lg:border-l fixed lg:static bottom-0 left-0 right-0 border-t bg-background z-10">
         <Controls
           activeEffects={activeEffects}
@@ -48,6 +56,7 @@ export default function Home() {
           onExport={() => {
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}
+          onResolutionChange={setResolution}
         />
       </div>
     </main>
