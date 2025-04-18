@@ -5,26 +5,20 @@ import { drawCircle } from "@/_lib/drawCircle";
 import { drawRect } from "@/_lib/drawRect";
 
 interface P5SketchProps {
-  lerpFactor: number;
-  ballSize: number;
   selectedEffect: string;
   onExport: (data: string) => void;
 }
 
-const effectsLibrary: { [key: string]: (p: p5) => void } = {
+const effectsLibrary: {
+  [key: string]: (p: p5, mx: number, my: number) => void;
+} = {
   circle: drawCircle,
   rectangle: drawRect,
   none: () => {},
 };
 
-const P5Sketch = ({
-  lerpFactor,
-  ballSize,
-  selectedEffect,
-  onExport,
-}: P5SketchProps) => {
+const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
-  const ballPos = useRef({ x: 0, y: 0 });
   const bufferCanvas = useRef<p5.Graphics | null>(null);
   const mainCanvas = useRef<p5.Element | null>(null);
 
@@ -33,12 +27,10 @@ const P5Sketch = ({
 
     const sketch = (p: p5) => {
       p.setup = () => {
-        // Create main display canvas
-        const canvas = p.createCanvas(1, 1); // Temporary size
+        const canvas = p.createCanvas(1, 1);
         mainCanvas.current = canvas;
         canvas.parent(sketchRef.current!);
 
-        // Create high-res buffer canvas
         bufferCanvas.current = p.createGraphics(1920, 1920);
 
         resizeCanvas();
@@ -53,9 +45,9 @@ const P5Sketch = ({
 
         let canvasSize;
         if (parentWidth >= parentHeight) {
-          canvasSize = parentHeight * 0.8; // 80% of height for desktop
+          canvasSize = parentHeight * 0.8;
         } else {
-          canvasSize = parentWidth * 0.8; // 80% of width for mobile
+          canvasSize = parentWidth * 0.8;
         }
 
         p.resizeCanvas(canvasSize, canvasSize);
@@ -67,34 +59,17 @@ const P5Sketch = ({
         if (!bufferCanvas.current) return;
 
         const buffer = bufferCanvas.current;
+        const scaleFactor = 1920 / p.width;
 
-        // Draw to buffer canvas
+        const bufferMouseX = p.mouseX * scaleFactor;
+        const bufferMouseY = p.mouseY * scaleFactor;
+
         buffer.background(0);
-        buffer.fill(255);
 
-        // Main ball sketch
-        ballPos.current.x = p.lerp(
-          ballPos.current.x,
-          p.mouseX * (1920 / p.width),
-          lerpFactor
-        );
-        ballPos.current.y = p.lerp(
-          ballPos.current.y,
-          p.mouseY * (1920 / p.height),
-          lerpFactor
-        );
-        buffer.ellipse(
-          ballPos.current.x,
-          ballPos.current.y,
-          ballSize * (1920 / p.width)
-        );
-
-        // Apply selected effect
         if (selectedEffect in effectsLibrary) {
-          effectsLibrary[selectedEffect](buffer);
+          effectsLibrary[selectedEffect](buffer, bufferMouseX, bufferMouseY);
         }
 
-        // Display buffer on main canvas
         p.image(buffer, 0, 0, p.width, p.height);
       };
 
@@ -104,7 +79,7 @@ const P5Sketch = ({
 
       p.keyPressed = () => {
         if (p.key === "e" && bufferCanvas.current) {
-          const data = bufferCanvas.current.elt.toDataURL("image/jpeg");
+          const data = bufferCanvas.current.elt.toDataURL("image/jpeg", 0.9);
           onExport(data);
         }
       };
@@ -112,7 +87,7 @@ const P5Sketch = ({
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [lerpFactor, ballSize, selectedEffect, onExport]);
+  }, [selectedEffect, onExport]);
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };

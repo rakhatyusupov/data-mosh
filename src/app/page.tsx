@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col lg:flex-row">
       {/* Canvas Container */}
-      <div className="flex-1 w-full h-screen flex items-center justify-start pt-12">
+      <div className="flex-1 w-full h-screen flex items-center justify-start ">
         <div className="relative w-full h-full flex items-center justify-center">
           <P5Sketch
             lerpFactor={lerpFactor}
