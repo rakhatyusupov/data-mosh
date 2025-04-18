@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import p5 from "p5";
 import { drawCircle } from "@/_lib/drawCircle";
 import { drawRect } from "@/_lib/drawRect";
+import { initParticles, drawParticles } from "@/_lib/drawParticles";
 
 interface Resolution {
   width: number;
@@ -15,9 +16,12 @@ interface P5SketchProps {
   resolution: Resolution;
 }
 
-const effectsLibrary = {
-  circle: drawCircle,
-  rectangle: drawRect,
+const effectsLibrary: {
+  [key: string]: (p: p5, buffer: p5.Graphics, mx: number, my: number) => void;
+} = {
+  circle: (p, buffer, mx, my) => drawCircle(buffer, mx, my),
+  rectangle: (p, buffer, mx, my) => drawRect(buffer, mx, my),
+  particles: drawParticles,
 };
 
 const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
@@ -73,15 +77,14 @@ const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
         const scaleX = resolution.width / p.width;
         const scaleY = resolution.height / p.height;
 
-        buffer.background(0);
+        const bufferMouseX = p.mouseX * scaleX;
+        const bufferMouseY = p.mouseY * scaleY;
+
+        //buffer.background(0);
 
         activeEffectsRef.current.forEach((effect) => {
           if (effectsLibrary[effect]) {
-            effectsLibrary[effect](
-              buffer,
-              p.mouseX * scaleX,
-              p.mouseY * scaleY
-            );
+            effectsLibrary[effect](p, buffer, bufferMouseX, bufferMouseY);
           }
         });
 

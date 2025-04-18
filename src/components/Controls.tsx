@@ -166,6 +166,16 @@ export function Controls({
           >
             Rectangle
           </Button>
+
+          <Button
+            variant={
+              activeEffects.includes("particles") ? "default" : "outline"
+            }
+            size="sm"
+            onClick={() => toggleEffect("particles")}
+          >
+            Particles
+          </Button>
         </div>
       </div>
 
