@@ -1,24 +1,19 @@
 "use client";
-import { useState } from "react";
+import { useState } from "react"; // Added this import
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface ControlsProps {
+  activeEffects: string[];
   onLerpChange: (value: number) => void;
   onSizeChange: (value: number) => void;
-  onEffectChange: (effect: string) => void;
+  onEffectChange: (effects: string[]) => void;
   onExport: () => void;
 }
 
 export function Controls({
+  activeEffects,
   onLerpChange,
   onSizeChange,
   onEffectChange,
@@ -26,11 +21,12 @@ export function Controls({
 }: ControlsProps) {
   const [lerp, setLerp] = useState(0.1);
   const [size, setSize] = useState(50);
-  const [effect, setEffect] = useState("none");
 
-  const handleEffectChange = (value: string) => {
-    setEffect(value);
-    onEffectChange(value);
+  const toggleEffect = (effect: string) => {
+    const newEffects = activeEffects.includes(effect)
+      ? activeEffects.filter((e) => e !== effect)
+      : [...activeEffects, effect];
+    onEffectChange(newEffects);
   };
 
   return (
@@ -70,17 +66,32 @@ export function Controls({
       </div>
 
       <div className="space-y-2">
-        <Label>Drawing Effect</Label>
-        <Select value={effect} onValueChange={handleEffectChange}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select effect" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="none">None</SelectItem>
-            <SelectItem value="circle">Circle</SelectItem>
-            <SelectItem value="rectangle">Rectangle</SelectItem>
-          </SelectContent>
-        </Select>
+        <Label>Drawing Effects</Label>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={activeEffects.length === 0 ? "default" : "outline"}
+            size="sm"
+            onClick={() => onEffectChange([])}
+          >
+            None
+          </Button>
+          <Button
+            variant={activeEffects.includes("circle") ? "default" : "outline"}
+            size="sm"
+            onClick={() => toggleEffect("circle")}
+          >
+            Circle
+          </Button>
+          <Button
+            variant={
+              activeEffects.includes("rectangle") ? "default" : "outline"
+            }
+            size="sm"
+            onClick={() => toggleEffect("rectangle")}
+          >
+            Rectangle
+          </Button>
+        </div>
       </div>
 
       <Button variant="outline" className="w-full" onClick={onExport}>

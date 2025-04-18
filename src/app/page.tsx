@@ -15,7 +15,7 @@ const P5Sketch = dynamic(() => import("@/components/sketch/P5Sketch"), {
 export default function Home() {
   const [lerpFactor, setLerpFactor] = useState(0.1);
   const [ballSize, setBallSize] = useState(50);
-  const [selectedEffect, setSelectedEffect] = useState("none");
+  const [activeEffects, setActiveEffects] = useState<string[]>([]);
 
   const handleExport = (data: string) => {
     const link = document.createElement("a");
@@ -32,7 +32,7 @@ export default function Home() {
           <P5Sketch
             lerpFactor={lerpFactor}
             ballSize={ballSize}
-            selectedEffect={selectedEffect}
+            activeEffects={activeEffects}
             onExport={handleExport}
           />
         </div>
@@ -41,9 +41,10 @@ export default function Home() {
       {/* Controls Panel */}
       <div className="lg:w-80 lg:h-screen lg:border-l fixed lg:static bottom-0 left-0 right-0 border-t bg-background z-10">
         <Controls
+          activeEffects={activeEffects}
           onLerpChange={setLerpFactor}
           onSizeChange={setBallSize}
-          onEffectChange={setSelectedEffect}
+          onEffectChange={setActiveEffects}
           onExport={() => {
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}

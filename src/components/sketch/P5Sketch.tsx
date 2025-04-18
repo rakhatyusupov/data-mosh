@@ -5,7 +5,7 @@ import { drawCircle } from "@/_lib/drawCircle";
 import { drawRect } from "@/_lib/drawRect";
 
 interface P5SketchProps {
-  selectedEffect: string;
+  activeEffects: string[];
   onExport: (data: string) => void;
 }
 
@@ -14,13 +14,17 @@ const effectsLibrary: {
 } = {
   circle: drawCircle,
   rectangle: drawRect,
-  none: () => {},
 };
 
-const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
+const P5Sketch = ({ activeEffects, onExport }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
   const mainCanvas = useRef<p5.Element | null>(null);
+  const activeEffectsRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    activeEffectsRef.current = activeEffects;
+  }, [activeEffects]);
 
   useEffect(() => {
     if (!sketchRef.current) return;
@@ -32,7 +36,6 @@ const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
         canvas.parent(sketchRef.current!);
 
         bufferCanvas.current = p.createGraphics(1920, 1920);
-
         resizeCanvas();
       };
 
@@ -43,13 +46,7 @@ const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
         const parentWidth = container.clientWidth;
         const parentHeight = container.clientHeight;
 
-        let canvasSize;
-        if (parentWidth >= parentHeight) {
-          canvasSize = parentHeight * 0.8;
-        } else {
-          canvasSize = parentWidth * 0.8;
-        }
-
+        let canvasSize = Math.min(parentWidth, parentHeight) * 0.8;
         p.resizeCanvas(canvasSize, canvasSize);
         mainCanvas.current.style("display", "block");
         mainCanvas.current.style("margin", "auto");
@@ -66,16 +63,16 @@ const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
 
         buffer.background(0);
 
-        if (selectedEffect in effectsLibrary) {
-          effectsLibrary[selectedEffect](buffer, bufferMouseX, bufferMouseY);
-        }
+        activeEffectsRef.current.forEach((effect) => {
+          if (effectsLibrary[effect]) {
+            effectsLibrary[effect](buffer, bufferMouseX, bufferMouseY);
+          }
+        });
 
         p.image(buffer, 0, 0, p.width, p.height);
       };
 
-      p.windowResized = () => {
-        resizeCanvas();
-      };
+      p.windowResized = resizeCanvas;
 
       p.keyPressed = () => {
         if (p.key === "e" && bufferCanvas.current) {
@@ -87,7 +84,7 @@ const P5Sketch = ({ selectedEffect, onExport }: P5SketchProps) => {
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [selectedEffect, onExport]);
+  }, [onExport]);
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };
