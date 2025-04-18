@@ -120,3 +120,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+#defaultCanvas0 {
+  height: 100%;
+  display: flex;
+}
+
+.parent > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

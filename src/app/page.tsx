@@ -28,7 +28,7 @@ export default function Home() {
     <main className="h-screen w-full flex flex-col lg:flex-row">
       {/* Canvas Container */}
       <div className="flex-1 w-full h-screen flex items-center justify-start ">
-        <div className="relative w-full h-full flex items-center justify-center">
+        <div className="parent relative w-full h-full flex items-center justify-center overflow-hidden">
           <P5Sketch
             lerpFactor={lerpFactor}
             ballSize={ballSize}
@@ -45,7 +45,6 @@ export default function Home() {
           onSizeChange={setBallSize}
           onEffectChange={setSelectedEffect}
           onExport={() => {
-            // Trigger export via keyboard event
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}
         />
