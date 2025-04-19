@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ColorPaletteCreator } from "./ColorPaletteContext";
+import { ColorPaletteCreator } from "./ColorPaletteCreator";
 
 const SIZE_PRESETS = [
   { label: "1:1 (1920×1920)", key: "1:1", width: 1920, height: 1920 },

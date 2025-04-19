@@ -80,7 +80,7 @@ const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
         const bufferMouseX = p.mouseX * scaleX;
         const bufferMouseY = p.mouseY * scaleY;
 
-        //buffer.background(0);
+        buffer.background(0);
 
         activeEffectsRef.current.forEach((effect) => {
           if (effectsLibrary[effect]) {

@@ -5,7 +5,6 @@ export const drawRect = (p: p5, mx: number, my: number) => {
   p.noFill();
   p.stroke(255);
   p.strokeWeight(2);
-
   const cols = Math.floor(p.map(mx, 0, p.width, 5, 40));
   const rows = Math.floor(p.map(my, 0, p.height, 5, 40));
   const gap = 20;
@@ -27,4 +26,5 @@ export const drawRect = (p: p5, mx: number, my: number) => {
   }
 
   p.pop();
+  p.clear();
 };

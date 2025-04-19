@@ -131,3 +131,10 @@
   align-items: center;
   justify-content: center;
 }
+
+@media (max-width: 1023px) {
+  .parent > div {
+    display: flex;
+    padding: 16px;
+  }
+}
