@@ -1,21 +1,32 @@
 "use client";
 import { useState } from "react";
 
-export function ColorPaletteCreator() {
-  const [colors, setColors] = useState(["#FAFAFA", "#F5F5F5", "#323232"]);
+export const globalColors = {
+  color1: "#FAFAFA",
+  color2: "#F5F5F5",
+  color3: "#323232",
+};
 
-  const updateColor = (index, value) => {
-    const updated = [...colors];
-    updated[index] = value;
+export function ColorPaletteCreator() {
+  const [colors, setColors] = useState(globalColors);
+
+  const updateColor = (key, value) => {
+    const updated = { ...colors, [key]: value };
     setColors(updated);
+    globalColors[key] = value; // Also update the global object
   };
 
   const addColor = () => {
-    setColors([...colors, "#FFFFFF"]);
+    const newKey = `color${Object.keys(colors).length + 1}`;
+    const updated = { ...colors, [newKey]: "#FFFFFF" };
+    setColors(updated);
+    globalColors[newKey] = "#FFFFFF"; // Update global
   };
 
-  const removeColor = (index) => {
-    setColors(colors.filter((_, i) => i !== index));
+  const removeColor = (key) => {
+    const { [key]: _, ...rest } = colors; // Omit the key
+    setColors(rest);
+    delete globalColors[key]; // Update global
   };
 
   return (
@@ -23,22 +34,22 @@ export function ColorPaletteCreator() {
       <h3 className="text-lg font-semibold">Color Palette</h3>
 
       <div className="space-y-2">
-        {colors.map((color, index) => (
-          <div key={index} className="flex items-center gap-2">
+        {Object.entries(colors).map(([key, color]) => (
+          <div key={key} className="flex items-center gap-2">
             <input
               type="color"
               value={color}
-              onChange={(e) => updateColor(index, e.target.value)}
+              onChange={(e) => updateColor(key, e.target.value)}
               className="h-10 w-10 rounded"
             />
             <input
               type="text"
               value={color}
-              onChange={(e) => updateColor(index, e.target.value)}
+              onChange={(e) => updateColor(key, e.target.value)}
               className="flex-1 border border-input rounded-md px-3 py-2 text-sm"
             />
             <button
-              onClick={() => removeColor(index)}
+              onClick={() => removeColor(key)}
               className="text-red-500 hover:underline text-sm"
             >
               Remove
@@ -55,4 +66,8 @@ export function ColorPaletteCreator() {
       </button>
     </div>
   );
+}
+
+export function logGlobalColors() {
+  console.log("Current global colors:", globalColors);
 }
