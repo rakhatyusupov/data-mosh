@@ -147,6 +147,6 @@
 
 .macros > div {
   display: flex;
-  flex-direction: row !important;
+  flex-direction: row;
   gap: 8px;
 }
