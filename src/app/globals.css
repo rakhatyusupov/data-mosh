@@ -138,3 +138,15 @@
     padding: 16px;
   }
 }
+
+.macros {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+.macros > div {
+  display: flex;
+  flex-direction: row !important;
+  gap: 8px;
+}

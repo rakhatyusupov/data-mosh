@@ -56,7 +56,7 @@ export function Controls({
   return (
     <>
       {/* Floating Resolution Controls */}
-      <div className="absolute top-2 left-2 ">
+      <div className="macros">
         <div className="space-y-2 flex-row">
           <Select value={selectedSize} onValueChange={setSelectedSize}>
             <SelectTrigger>
@@ -72,7 +72,7 @@ export function Controls({
           </Select>
 
           {selectedSize === "custom" && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-56">
               <Input
                 type="number"
                 placeholder="Width"
