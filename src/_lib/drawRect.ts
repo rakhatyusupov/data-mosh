@@ -26,5 +26,4 @@ export const drawRect = (p: p5, mx: number, my: number) => {
   }
 
   p.pop();
-  p.clear();
 };

@@ -84,7 +84,6 @@ class ParticleBuffer {
   }
 
   display() {
-    //this.pg.background(this.p.color(247, 248, 242));
     this.particles.forEach((particle) => particle.display(this.pg));
   }
 }

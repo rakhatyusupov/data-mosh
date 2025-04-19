@@ -47,7 +47,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="lg:w-80 lg:h-screen lg:border-l fixed lg:static bottom-0 left-0 right-0 border-t bg-background z-10">
+      <div className="lg:w-80 lg:h-screen lg:border-l lg:static bottom-0 left-0 right-0 border-t bg-background z-10">
         <Controls
           activeEffects={activeEffects}
           onLerpChange={setLerpFactor}
