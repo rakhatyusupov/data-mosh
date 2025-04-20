@@ -25,6 +25,7 @@ export default function Home() {
     width: 1920,
     height: 1920,
   });
+  const [clearBackground, setClearBackground] = useState(true); // Added this state
 
   const handleExport = (data: string) => {
     const link = document.createElement("a");
@@ -43,6 +44,7 @@ export default function Home() {
             activeEffects={activeEffects}
             onExport={handleExport}
             resolution={resolution}
+            clearBackground={clearBackground} // Pass the state
           />
         </div>
       </div>
@@ -57,6 +59,7 @@ export default function Home() {
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}
           onResolutionChange={setResolution}
+          onClearBackgroundChange={setClearBackground} // Pass the setter
         />
       </div>
     </main>

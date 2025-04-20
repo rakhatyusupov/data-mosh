@@ -5,12 +5,12 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import {
   Select,
   SelectContent,
@@ -34,12 +34,12 @@ export function Controls({
   onEffectChange,
   onExport,
   onResolutionChange,
+  onClearBackgroundChange,
 }) {
-  const [lerp, setLerp] = useState(0.1);
-  const [size, setSize] = useState(50);
   const [selectedSize, setSelectedSize] = useState("1:1");
   const [customWidth, setCustomWidth] = useState(1920);
   const [customHeight, setCustomHeight] = useState(1920);
+  const [clearBackground, setClearBackground] = useState(true);
 
   useEffect(() => {
     if (selectedSize === "custom") {
@@ -51,6 +51,10 @@ export function Controls({
       }
     }
   }, [selectedSize, customWidth, customHeight, onResolutionChange]);
+
+  useEffect(() => {
+    onClearBackgroundChange(clearBackground);
+  }, [clearBackground, onClearBackgroundChange]);
 
   const toggleEffect = (effect) => {
     const newEffects = activeEffects.includes(effect)
@@ -99,6 +103,15 @@ export function Controls({
           side="right"
         >
           <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="clear-background">Clear Background</Label>
+              <Switch
+                id="clear-background"
+                checked={clearBackground}
+                onCheckedChange={setClearBackground}
+              />
+            </div>
+
             <Select value={selectedSize} onValueChange={setSelectedSize}>
               <Label>Resolution</Label>
               <SelectTrigger className="w-full">

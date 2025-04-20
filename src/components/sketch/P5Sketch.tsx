@@ -14,6 +14,7 @@ interface P5SketchProps {
   activeEffects: string[];
   onExport: (data: string) => void;
   resolution: Resolution;
+  clearBackground: boolean;
 }
 
 const effectsLibrary: {
@@ -24,7 +25,12 @@ const effectsLibrary: {
   particles: drawParticles,
 };
 
-const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
+const P5Sketch = ({
+  activeEffects,
+  onExport,
+  resolution,
+  clearBackground,
+}: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
   const mainCanvas = useRef<p5.Element | null>(null);
@@ -80,7 +86,9 @@ const P5Sketch = ({ activeEffects, onExport, resolution }: P5SketchProps) => {
         const bufferMouseX = p.mouseX * scaleX;
         const bufferMouseY = p.mouseY * scaleY;
 
-        //buffer.background(0);
+        if (clearBackground) {
+          buffer.background(0);
+        }
 
         activeEffectsRef.current.forEach((effect) => {
           if (effectsLibrary[effect]) {
