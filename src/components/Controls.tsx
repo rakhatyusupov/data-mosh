@@ -103,15 +103,6 @@ export function Controls({
           side="right"
         >
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="clear-background">Clear Background</Label>
-              <Switch
-                id="clear-background"
-                checked={clearBackground}
-                onCheckedChange={setClearBackground}
-              />
-            </div>
-
             <Select value={selectedSize} onValueChange={setSelectedSize}>
               <Label>Resolution</Label>
               <SelectTrigger className="w-full">
@@ -154,6 +145,14 @@ export function Controls({
                 />
               </div>
             )}
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="clear-background">Clear Background</Label>
+            <Switch
+              id="clear-background"
+              checked={clearBackground}
+              onCheckedChange={setClearBackground}
+            />
           </div>
         </PopoverContent>
       </Popover>
