@@ -6,6 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -56,45 +62,88 @@ export function Controls({
   return (
     <>
       {/* Floating Resolution Controls */}
-      <div className="macros">
-        <div className="space-y-2 flex-row">
-          <Select value={selectedSize} onValueChange={setSelectedSize}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select resolution" />
-            </SelectTrigger>
-            <SelectContent>
-              {SIZE_PRESETS.map((preset) => (
-                <SelectItem key={preset.key} value={preset.key}>
-                  {preset.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="absolute top-4 left-4 z-50 w-10 h-10 p-0 rounded-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4"
+            >
+              <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
+              <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+              <path d="M12 2v2" />
+              <path d="M12 22v-2" />
+              <path d="m17 17 1.4 1.4" />
+              <path d="m4.6 19.4 1.4-1.4" />
+              <path d="M22 12h-2" />
+              <path d="M2 12h2" />
+              <path d="m7 7 1.4-1.4" />
+              <path d="m18.4 5.6-1.4 1.4" />
+            </svg>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-64 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-3 rounded-lg border shadow-sm space-y-2"
+          align="start"
+          side="right"
+        >
+          <div className="space-y-2">
+            <Select value={selectedSize} onValueChange={setSelectedSize}>
+              <Label>Resolution</Label>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select resolution" />
+              </SelectTrigger>
+              <SelectContent>
+                {SIZE_PRESETS.map((preset) => (
+                  <SelectItem key={preset.key} value={preset.key}>
+                    {preset.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          {selectedSize === "custom" && (
-            <div className="flex gap-2 w-56">
-              <Input
-                type="number"
-                placeholder="Width"
-                value={customWidth}
-                onChange={(e) =>
-                  setCustomWidth(Math.max(1, parseInt(e.target.value) || 1920))
-                }
-                min="1"
-              />
-              <Input
-                type="number"
-                placeholder="Height"
-                value={customHeight}
-                onChange={(e) =>
-                  setCustomHeight(Math.max(1, parseInt(e.target.value) || 1920))
-                }
-                min="1"
-              />
-            </div>
-          )}
-        </div>
-      </div>
+            {selectedSize === "custom" && (
+              <div className="flex gap-2 mt-2">
+                <Input
+                  type="number"
+                  placeholder="Width"
+                  value={customWidth}
+                  onChange={(e) =>
+                    setCustomWidth(
+                      Math.max(1, parseInt(e.target.value) || 1920)
+                    )
+                  }
+                  min="1"
+                  className="flex-1"
+                />
+                <Input
+                  type="number"
+                  placeholder="Height"
+                  value={customHeight}
+                  onChange={(e) =>
+                    setCustomHeight(
+                      Math.max(1, parseInt(e.target.value) || 1920)
+                    )
+                  }
+                  min="1"
+                  className="flex-1"
+                />
+              </div>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
 
       <div className="p-4">
         <Tabs defaultValue="general" className="space-y-4">
