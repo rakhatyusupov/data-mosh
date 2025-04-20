@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   Popover,
@@ -35,11 +36,19 @@ export function Controls({
   onExport,
   onResolutionChange,
   onClearBackgroundChange,
+  onChaosLevelChange,
+  onTextContentChange,
 }) {
   const [selectedSize, setSelectedSize] = useState("1:1");
   const [customWidth, setCustomWidth] = useState(1920);
   const [customHeight, setCustomHeight] = useState(1920);
   const [clearBackground, setClearBackground] = useState(true);
+  const [chaosLevel, setChaosLevel] = useState(50);
+  const [textContent, setTextContent] = useState({
+    h1: "Heading 1",
+    h2: "Heading 2",
+    p: "Paragraph text goes here...",
+  });
 
   useEffect(() => {
     if (selectedSize === "custom") {
@@ -56,11 +65,26 @@ export function Controls({
     onClearBackgroundChange(clearBackground);
   }, [clearBackground, onClearBackgroundChange]);
 
+  useEffect(() => {
+    onChaosLevelChange(chaosLevel);
+  }, [chaosLevel, onChaosLevelChange]);
+
+  useEffect(() => {
+    onTextContentChange && onTextContentChange(textContent);
+  }, [textContent, onTextContentChange]);
+
   const toggleEffect = (effect) => {
     const newEffects = activeEffects.includes(effect)
       ? activeEffects.filter((e) => e !== effect)
       : [...activeEffects, effect];
     onEffectChange(newEffects);
+  };
+
+  const handleTextChange = (field, value) => {
+    setTextContent((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   return (
@@ -103,6 +127,15 @@ export function Controls({
           side="right"
         >
           <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="clear-background">Clear Background</Label>
+              <Switch
+                id="clear-background"
+                checked={clearBackground}
+                onCheckedChange={setClearBackground}
+              />
+            </div>
+
             <Select value={selectedSize} onValueChange={setSelectedSize}>
               <Label>Resolution</Label>
               <SelectTrigger className="w-full">
@@ -146,14 +179,6 @@ export function Controls({
               </div>
             )}
           </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="clear-background">Clear Background</Label>
-            <Switch
-              id="clear-background"
-              checked={clearBackground}
-              onCheckedChange={setClearBackground}
-            />
-          </div>
         </PopoverContent>
       </Popover>
 
@@ -165,6 +190,51 @@ export function Controls({
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
+            {/* Text Inputs Section */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="h1-text">Heading 1</Label>
+                <Input
+                  id="h1-text"
+                  value={textContent.h1}
+                  onChange={(e) => handleTextChange("h1", e.target.value)}
+                  placeholder="Main heading"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="h2-text">Heading 2</Label>
+                <Input
+                  id="h2-text"
+                  value={textContent.h2}
+                  onChange={(e) => handleTextChange("h2", e.target.value)}
+                  placeholder="Subheading"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="paragraph-text">Paragraph</Label>
+                <Textarea
+                  id="paragraph-text"
+                  value={textContent.p}
+                  onChange={(e) => handleTextChange("p", e.target.value)}
+                  placeholder="Enter your paragraph text"
+                  className="min-h-[100px]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Chaos Level: {chaosLevel}</Label>
+              <Slider
+                value={[chaosLevel]}
+                onValueChange={(value) => setChaosLevel(value[0])}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </div>
+
             <div className="space-y-2">
               <Label>Drawing Effects</Label>
               <div className="flex flex-wrap gap-2">

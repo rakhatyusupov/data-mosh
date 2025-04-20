@@ -15,14 +15,24 @@ interface P5SketchProps {
   onExport: (data: string) => void;
   resolution: Resolution;
   clearBackground: boolean;
+  chaosLevel: number; // Add chaosLevel to props interface
 }
 
 const effectsLibrary: {
-  [key: string]: (p: p5, buffer: p5.Graphics, mx: number, my: number) => void;
+  [key: string]: (
+    p: p5,
+    buffer: p5.Graphics,
+    mx: number,
+    my: number,
+    chaosLevel: number
+  ) => void;
 } = {
-  circle: (p, buffer, mx, my) => drawCircle(buffer, mx, my),
-  rectangle: (p, buffer, mx, my) => drawRect(buffer, mx, my),
-  particles: drawParticles,
+  circle: (p, buffer, mx, my, chaosLevel) =>
+    drawCircle(buffer, mx, my, chaosLevel),
+  rectangle: (p, buffer, mx, my, chaosLevel) =>
+    drawRect(buffer, mx, my, chaosLevel),
+  particles: (p, buffer, mx, my, chaosLevel) =>
+    drawParticles(buffer, mx, my, chaosLevel),
 };
 
 const P5Sketch = ({
@@ -30,6 +40,7 @@ const P5Sketch = ({
   onExport,
   resolution,
   clearBackground,
+  chaosLevel, // Destructure the prop
 }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
@@ -92,7 +103,13 @@ const P5Sketch = ({
 
         activeEffectsRef.current.forEach((effect) => {
           if (effectsLibrary[effect]) {
-            effectsLibrary[effect](p, buffer, bufferMouseX, bufferMouseY);
+            effectsLibrary[effect](
+              p,
+              buffer,
+              bufferMouseX,
+              bufferMouseY,
+              chaosLevel
+            );
           }
         });
 
@@ -111,7 +128,7 @@ const P5Sketch = ({
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [onExport, resolution]);
+  }, [onExport, resolution, clearBackground, chaosLevel]);
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };

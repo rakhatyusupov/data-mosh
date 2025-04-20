@@ -25,7 +25,8 @@ export default function Home() {
     width: 1920,
     height: 1920,
   });
-  const [clearBackground, setClearBackground] = useState(true); // Added this state
+  const [clearBackground, setClearBackground] = useState(true);
+  const [chaosLevel, setChaosLevel] = useState(50); // Add chaosLevel state
 
   const handleExport = (data: string) => {
     const link = document.createElement("a");
@@ -44,7 +45,8 @@ export default function Home() {
             activeEffects={activeEffects}
             onExport={handleExport}
             resolution={resolution}
-            clearBackground={clearBackground} // Pass the state
+            clearBackground={clearBackground}
+            chaosLevel={chaosLevel} // Pass chaosLevel to P5Sketch
           />
         </div>
       </div>
@@ -59,7 +61,8 @@ export default function Home() {
             document.dispatchEvent(new KeyboardEvent("keydown", { key: "e" }));
           }}
           onResolutionChange={setResolution}
-          onClearBackgroundChange={setClearBackground} // Pass the setter
+          onClearBackgroundChange={setClearBackground}
+          onChaosLevelChange={setChaosLevel} // Pass setter to Controls
         />
       </div>
     </main>
