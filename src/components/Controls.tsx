@@ -190,7 +190,6 @@ export function Controls({
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
-            {/* Text Inputs Section */}
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="h1-text">Heading 1</Label>

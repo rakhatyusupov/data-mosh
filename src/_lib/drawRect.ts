@@ -68,13 +68,11 @@ export const drawRect = (
       };
 
       if (i === 0 && j === 0) {
-        rectsData = []; // Reset on first rect to avoid duplicates
-      }
+        rectsData = []; 
       rectsData.push(rectData);
     }
   }
 
-  // Draw text on random rectangles
   if (textContent && rectsData.length > 0) {
     p.textAlign(p.CENTER, p.CENTER);
     p.fill(255);
@@ -82,15 +80,12 @@ export const drawRect = (
 
     textItems.forEach((item, index) => {
       if (rectsData.length > index * 5) {
-        // Ensure we have enough rectangles
         const randomRectIndex = Math.floor(p.random(rectsData.length));
         const rect = rectsData[randomRectIndex];
 
-        // Choose a random vertex as anchor point
         const vertexIndex = Math.floor(p.random(4));
         const anchor = rect.vertices[vertexIndex];
 
-        // Apply chaos level to position
         const chaosX = p.map(chaosLevel, 0, 100, 0, rect.width / 2);
         const chaosY = p.map(chaosLevel, 0, 100, 0, rect.height / 2);
         const textX =
