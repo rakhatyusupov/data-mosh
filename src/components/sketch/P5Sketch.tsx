@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import p5 from "p5";
 import { drawCircle } from "@/_lib/drawCircle";
-import { drawRect } from "@/_lib/drawRect";
+import { drawGrid } from "@/_lib/drawGrid";
 import { initParticles, drawParticles } from "@/_lib/drawParticles";
 
 interface Resolution {
@@ -15,7 +15,16 @@ interface P5SketchProps {
   onExport: (data: string) => void;
   resolution: Resolution;
   clearBackground: boolean;
-  chaosLevel: number; // Add chaosLevel to props interface
+  chaosLevel: number;
+  gridResolution: {
+    cols: number;
+    rows: number;
+  };
+  textContent: {
+    h1: string;
+    h2: string;
+    p: string;
+  };
 }
 
 const effectsLibrary: {
@@ -24,15 +33,25 @@ const effectsLibrary: {
     buffer: p5.Graphics,
     mx: number,
     my: number,
-    chaosLevel: number
+    chaosLevel: number,
+    gridResolution?: { cols: number; rows: number },
+    particleSystem?: any
   ) => void;
 } = {
   circle: (p, buffer, mx, my, chaosLevel) =>
     drawCircle(buffer, mx, my, chaosLevel),
-  rectangle: (p, buffer, mx, my, chaosLevel) =>
-    drawRect(buffer, mx, my, chaosLevel),
-  particles: (p, buffer, mx, my, chaosLevel) =>
-    drawParticles(buffer, mx, my, chaosLevel),
+  grid: (p, buffer, mx, my, chaosLevel, gridResolution) =>
+    drawGrid(
+      p,
+      buffer,
+      mx,
+      my,
+      gridResolution?.cols || 10,
+      gridResolution?.rows || 10,
+      chaosLevel
+    ),
+  particles: (p, buffer, mx, my, chaosLevel, _, particleSystem) =>
+    drawParticles(buffer, mx, my, chaosLevel, particleSystem),
 };
 
 const P5Sketch = ({
@@ -40,12 +59,15 @@ const P5Sketch = ({
   onExport,
   resolution,
   clearBackground,
-  chaosLevel, // Destructure the prop
+  chaosLevel,
+  gridResolution,
+  textContent,
 }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
   const mainCanvas = useRef<p5.Element | null>(null);
   const activeEffectsRef = useRef<string[]>([]);
+  const particleSystemRef = useRef<any>(null);
 
   useEffect(() => {
     activeEffectsRef.current = activeEffects;
@@ -60,6 +82,11 @@ const P5Sketch = ({
         mainCanvas.current = canvas;
         canvas.parent(sketchRef.current!);
         bufferCanvas.current = p.createGraphics(
+          resolution.width,
+          resolution.height
+        );
+        particleSystemRef.current = initParticles(
+          p,
           resolution.width,
           resolution.height
         );
@@ -108,10 +135,26 @@ const P5Sketch = ({
               buffer,
               bufferMouseX,
               bufferMouseY,
-              chaosLevel
+              chaosLevel / 100,
+              gridResolution,
+              particleSystemRef.current
             );
           }
         });
+
+        // Render text content with safety check
+        if (textContent) {
+          buffer.push();
+          buffer.textSize(32);
+          buffer.fill(255);
+          buffer.textAlign(buffer.CENTER, buffer.TOP);
+          buffer.text(textContent.h1, buffer.width / 2, 20);
+          buffer.textSize(24);
+          buffer.text(textContent.h2, buffer.width / 2, 60);
+          buffer.textSize(16);
+          buffer.text(textContent.p, 40, 100, buffer.width - 80);
+          buffer.pop();
+        }
 
         p.image(buffer, 0, 0, p.width, p.height);
       };
@@ -128,7 +171,14 @@ const P5Sketch = ({
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [onExport, resolution, clearBackground, chaosLevel]);
+  }, [
+    onExport,
+    resolution,
+    clearBackground,
+    chaosLevel,
+    gridResolution,
+    textContent,
+  ]);
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };

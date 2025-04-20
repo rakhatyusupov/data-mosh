@@ -38,6 +38,7 @@ export function Controls({
   onClearBackgroundChange,
   onChaosLevelChange,
   onTextContentChange,
+  onGridResolutionChange,
 }) {
   const [selectedSize, setSelectedSize] = useState("1:1");
   const [customWidth, setCustomWidth] = useState(1920);
@@ -48,6 +49,10 @@ export function Controls({
     h1: "Heading 1",
     h2: "Heading 2",
     p: "Paragraph text goes here...",
+  });
+  const [gridResolution, setGridResolution] = useState({
+    cols: 10,
+    rows: 10,
   });
 
   useEffect(() => {
@@ -72,6 +77,10 @@ export function Controls({
   useEffect(() => {
     onTextContentChange && onTextContentChange(textContent);
   }, [textContent, onTextContentChange]);
+
+  useEffect(() => {
+    onGridResolutionChange && onGridResolutionChange(gridResolution);
+  }, [gridResolution, onGridResolutionChange]);
 
   const toggleEffect = (effect) => {
     const newEffects = activeEffects.includes(effect)
@@ -233,6 +242,39 @@ export function Controls({
                 max={100}
                 step={1}
               />
+
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Grid Columns: {gridResolution.cols}</Label>
+                  <Slider
+                    value={[gridResolution.cols]}
+                    onValueChange={(value) =>
+                      setGridResolution((prev) => ({
+                        ...prev,
+                        cols: value[0],
+                      }))
+                    }
+                    min={1}
+                    max={50}
+                    step={1}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Grid Rows: {gridResolution.rows}</Label>
+                  <Slider
+                    value={[gridResolution.rows]}
+                    onValueChange={(value) =>
+                      setGridResolution((prev) => ({
+                        ...prev,
+                        rows: value[0],
+                      }))
+                    }
+                    min={1}
+                    max={50}
+                    step={1}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">

@@ -26,7 +26,17 @@ export default function Home() {
     height: 1920,
   });
   const [clearBackground, setClearBackground] = useState(true);
-  const [chaosLevel, setChaosLevel] = useState(50); // Add chaosLevel state
+  const [chaosLevel, setChaosLevel] = useState(50);
+  const [gridResolution, setGridResolution] = useState({
+    cols: 10,
+    rows: 10,
+  });
+  // Added textContent state
+  const [textContent, setTextContent] = useState({
+    h1: "Heading 1",
+    h2: "Heading 2",
+    p: "Paragraph text goes here...",
+  });
 
   const handleExport = (data: string) => {
     const link = document.createElement("a");
@@ -46,7 +56,9 @@ export default function Home() {
             onExport={handleExport}
             resolution={resolution}
             clearBackground={clearBackground}
-            chaosLevel={chaosLevel} // Pass chaosLevel to P5Sketch
+            chaosLevel={chaosLevel}
+            gridResolution={gridResolution} // Added missing prop
+            textContent={textContent} // Pass textContent to P5Sketch
           />
         </div>
       </div>
@@ -62,7 +74,9 @@ export default function Home() {
           }}
           onResolutionChange={setResolution}
           onClearBackgroundChange={setClearBackground}
-          onChaosLevelChange={setChaosLevel} // Pass setter to Controls
+          onChaosLevelChange={setChaosLevel}
+          onGridResolutionChange={setGridResolution}
+          onTextContentChange={setTextContent} // Pass setter to Controls
         />
       </div>
     </main>
