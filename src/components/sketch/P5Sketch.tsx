@@ -15,7 +15,8 @@ interface P5SketchProps {
   onExport: (data: string) => void;
   resolution: Resolution;
   clearBackground: boolean;
-  chaosLevel: number; // Add chaosLevel to props interface
+  chaosLevel: number;
+  textContent: { h1: string; h2: string; p: string }; // Add textContent to props interface
 }
 
 const effectsLibrary: {
@@ -24,15 +25,16 @@ const effectsLibrary: {
     buffer: p5.Graphics,
     mx: number,
     my: number,
-    chaosLevel: number
+    chaosLevel: number,
+    textContent: { h1: string; h2: string; p: string } // Add textContent to effectsLibrary
   ) => void;
 } = {
-  circle: (p, buffer, mx, my, chaosLevel) =>
-    drawCircle(buffer, mx, my, chaosLevel),
-  rectangle: (p, buffer, mx, my, chaosLevel) =>
-    drawRect(buffer, mx, my, chaosLevel),
-  particles: (p, buffer, mx, my, chaosLevel) =>
-    drawParticles(buffer, mx, my, chaosLevel),
+  circle: (p, buffer, mx, my, chaosLevel, textContent) =>
+    drawCircle(buffer, mx, my, chaosLevel, textContent),
+  rectangle: (p, buffer, mx, my, chaosLevel, textContent) =>
+    drawRect(buffer, mx, my, chaosLevel, textContent),
+  particles: (p, buffer, mx, my, chaosLevel, textContent) =>
+    drawParticles(buffer, mx, my, chaosLevel, textContent),
 };
 
 const P5Sketch = ({
@@ -40,7 +42,8 @@ const P5Sketch = ({
   onExport,
   resolution,
   clearBackground,
-  chaosLevel, // Destructure the prop
+  chaosLevel,
+  textContent, // Destructure the prop
 }: P5SketchProps) => {
   const sketchRef = useRef<HTMLDivElement>(null);
   const bufferCanvas = useRef<p5.Graphics | null>(null);
@@ -108,7 +111,8 @@ const P5Sketch = ({
               buffer,
               bufferMouseX,
               bufferMouseY,
-              chaosLevel
+              chaosLevel,
+              textContent // Pass textContent to the effect
             );
           }
         });
@@ -128,7 +132,7 @@ const P5Sketch = ({
 
     const p5Instance = new p5(sketch);
     return () => p5Instance.remove();
-  }, [onExport, resolution, clearBackground, chaosLevel]);
+  }, [onExport, resolution, clearBackground, chaosLevel, textContent]); // Add textContent to dependencies
 
   return <div ref={sketchRef} className="w-full h-full" />;
 };

@@ -20,13 +20,13 @@ export function ColorPaletteCreator() {
     const newKey = `color${Object.keys(colors).length + 1}`;
     const updated = { ...colors, [newKey]: "#FFFFFF" };
     setColors(updated);
-    globalColors[newKey] = "#FFFFFF"; // Update global
+    globalColors[newKey] = "#FFFFFF";
   };
 
   const removeColor = (key) => {
-    const { [key]: _, ...rest } = colors; // Omit the key
+    const { [key]: _, ...rest } = colors;
     setColors(rest);
-    delete globalColors[key]; // Update global
+    delete globalColors[key];
   };
 
   return (
